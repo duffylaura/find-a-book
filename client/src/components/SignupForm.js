@@ -22,7 +22,7 @@ const SignupForm = () => {
     password: '' 
   });
 
-  const [addUser, { error, data }] = useMutation(ADD_USER);
+  const [addUser, { error }] = useMutation(ADD_USER);
 
   // Validations added in with useEffect
   const [validated] = useState(false);

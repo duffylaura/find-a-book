@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+// import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 
@@ -23,15 +24,13 @@ const SavedBooks = () => {
     if (!token) {return false;}
     else {
       try {
-        const { data } = await removeBook({
-          variables: { bookId },
-        });
-
-        removeBookId(bookId);
-      } catch (err) {
+        const { data } = await removeBook({variables: { bookId },});
+        removeBookId(data);
+      } 
+      
+      catch (err) {
         console.error(err);
-      }
-    }};
+      }}};
 
   if (loading) {
     return <h2>LOADING...</h2>;

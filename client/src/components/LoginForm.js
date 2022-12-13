@@ -12,6 +12,8 @@ const LoginForm = () => {
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  const [login, { error }] = useMutation(LOGIN);
+
   // Again, use "useEffect" for validation set up in returned JSX //
   useEffect(() => {
     if (error) {
@@ -23,7 +25,7 @@ const LoginForm = () => {
 
 /////
 
-  const [login, { error }] = useMutation(LOGIN);
+  
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;

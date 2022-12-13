@@ -22,17 +22,13 @@ const SearchBooks = () => {
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    if (!searchInput) {
-      return false;
-    }
+    if (!searchInput) {return false;}
 
     try {
-      const response = await searchGoogleBooks(searchInput);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      //Google API Fetch request
+     const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}`);
+      
+     if (!response.ok) { throw new Error('Could not fetch request!');}
 
       const { items } = await response.json();
 
@@ -46,9 +42,7 @@ const SearchBooks = () => {
 
       setSearchedBooks(bookData);
       setSearchInput('');
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {console.error(err);}
   };
 
   const handleSaveBook = async (bookId) => {

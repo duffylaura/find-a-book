@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import AppNavbar from './components/Navbar';
+import Wildcard from './pages/Wildcard';
 
 const client = new ApolloClient({
   uri: '/graphql',
@@ -29,6 +30,12 @@ function App() {
               path = "/saved"
               element={<SavedBooks/>}
               />
+
+              <Route
+              path = "*"
+              element={<Wildcard/>}
+              />
+
 
             </Routes>
         </div>

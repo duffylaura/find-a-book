@@ -1,19 +1,26 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User } = require('../models');
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        users: async() => {
-            return await User.find();
+        me: async(parent, args, context) => {
+          if (context.user){
+            const foundUser = await User.findOne({_id: context.user._id})
+            return founndUser;
+          }
+            
         }
     },
     Mutation: {
-        login: async (parent, {username, password}) => {
-            const user = await User.findOne({username});
-            if (!user) {throw new AuthenticationError('No username found!')}
+        login: async (parent, {email, password}) => {
+            const user = await User.findOne({email});
+            if (!user) {throw new AuthenticationError('No email found!')}
             const correctPassword = await user.isCorrectPassword(password);
             if (!correctPassword){throw new AuthenticationError('Password not correct!')}
-            return {user};
+            
+            const token = signToken(user);
+            return { token, user };
         },
 
         addUser: async (parent, {username, email, password}) => {

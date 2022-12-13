@@ -31,7 +31,7 @@ const resolvers = {
               return updatedUser;
             }
             throw new AuthenticationError('Please log in to proceed.');
-          },
+        },
           removeBook: async (parent, { id }, context) => {
             if (context.user) {
               const updatedUser = await User.findByIdAndUpdate(
@@ -42,7 +42,9 @@ const resolvers = {
               return updatedUser;
             }
             throw new AuthenticationError('Please log in to proceed.');
-          },
+        },
 
     }
 }
+
+module.exports = resolvers;

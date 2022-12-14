@@ -7,7 +7,7 @@ const resolvers = {
         me: async(parent, args, context) => {
           if (context.user){
             const foundUser = await User.findOne({_id: context.user._id})
-            return founndUser;
+            return foundUser;
           }
             
         }
@@ -28,16 +28,16 @@ const resolvers = {
             return {user};
         },
 
-        saveBook: async (parent, { saveThis }, context) => {
+        saveBook: async (parent, { bookID }, context) => {
             if (context.user) {
               const updatedUser = await User.findByIdAndUpdate(
                 { _id: context.user._id },
-                { $push: { savedBooks: saveThis }},
+                { $push: { savedBooks: bookID }},
                 { new: true }
               );
               return updatedUser;
             }
-            throw new AuthenticationError('Please log in to proceed.');
+            throw new AuthenticationError('SAVE book error. Please log in to proceed.');
         },
           removeBook: async (parent, { id }, context) => {
             if (context.user) {
@@ -48,7 +48,7 @@ const resolvers = {
               );
               return updatedUser;
             }
-            throw new AuthenticationError('Please log in to proceed.');
+            throw new AuthenticationError('REMOVE book error. Please log in to proceed.');
         },
 
     }

@@ -1,60 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-//import { createUser } from '../utils/API';
+import { createUser } from '../utils/API';
 import Auth from '../utils/auth';
-
-import { useMutation } from '@apollo/client';
-import { ADD_USER } from '../utils/mutations';
-
 
 const SignupForm = () => {
   // set initial form state
-  // const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
-  // // set state for form validation
-  // const [validated] = useState(false);
-  // // set state for alert
-  // const [showAlert, setShowAlert] = useState(false);
-
-  const [userFormData, setUserFormData] = useState({ 
-    username: '', 
-    email: '', 
-    password: '' 
-  });
-
-  const [addUser, { error }] = useMutation(ADD_USER);
-
-  // Validations added in with useEffect
+  const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
+  // set state for form validation
   const [validated] = useState(false);
+  // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
-  useEffect(() => {if (error) {setShowAlert(true);} 
-                  else {setShowAlert(false);} }, 
-                  [error]);
-
-  ///
-  
-  const handleInputChange = async (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    // check if form has everything (as per react-bootstrap docs)
+    const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
     }
 
     try {
-      const { data } = await addUser({
-        variables: { ...userFormData },
-      });
+      const response = await createUser(userFormData);
 
-      Auth.login(data.addUser.token);
+      if (!response.ok) {
+        throw new Error('something went wrong!');
+      }
+
+      const { token, user } = await response.json();
+      console.log(user);
+      Auth.login(token);
     } catch (err) {
       console.error(err);
+      setShowAlert(true);
     }
 
     setUserFormData({

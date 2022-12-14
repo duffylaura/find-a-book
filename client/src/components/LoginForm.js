@@ -1,49 +1,47 @@
-import React, { useState, useEffect } from 'react';
+// see SignupForm.js for comments
+import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-//import { loginUser } from '../utils/API';
+import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
-
-import { useMutation } from '@apollo/client';
-import { LOGIN } from '../utils/mutations';
 
 const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const [login, { error }] = useMutation(LOGIN);
-
-  // Again, use "useEffect" for validation set up in returned JSX //
-  useEffect(() => {
-    if (error) {
-      setShowAlert(true);
-    } else {
-      setShowAlert(false);
-    }
-  }, [error]);
-
-/////
-
-  const handleInputChange = async (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    // check if form has everything (as per react-bootstrap docs)
+    const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
     }
 
     try {
-      const { data } = await login({variables: { ...userFormData }});
-      Auth.login(data.login.token);
-      } catch (err) {console.error(err);}
+      const response = await loginUser(userFormData);
+
+      if (!response.ok) {
+        throw new Error('something went wrong!');
+      }
+
+      const { token, user } = await response.json();
+      console.log(user);
+      Auth.login(token);
+    } catch (err) {
+      console.error(err);
+      setShowAlert(true);
+    }
 
     setUserFormData({
+      username: '',
       email: '',
       password: '',
     });

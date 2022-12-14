@@ -1,11 +1,10 @@
-import { connect, connection } from 'mongoose';
+const mongoose = require('mongoose');
 
-connect(
-  process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/programming-thoughts',
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/find-a-book-app', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
 
-export default connection;
+module.exports = mongoose.connection;

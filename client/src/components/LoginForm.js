@@ -25,8 +25,6 @@ const LoginForm = () => {
 
 /////
 
-  
-
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setUserFormData({ ...userFormData, [name]: value });

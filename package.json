@@ -1,21 +1,24 @@
 {
-  "name": "googlebooks-app",
+  "name": "findabook",
   "version": "1.0.0",
-  "description": "",
   "engines": {
-    "node": "16.16.0"
+    "node": "18.12.1"
   },
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "node server/server.js --ignore client",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
     "install": "cd server && npm i && cd ../client && npm i",
+    "seed": "cd server && npm run seed",
     "build": "cd client && npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Laura Duffy",
+  "license": "MIT",
   "devDependencies": {
-    "concurrently": "^5.1.0"
+    "babel-plugin-graphql-tag": "^3.3.0",
+    "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.20"
   }
 }

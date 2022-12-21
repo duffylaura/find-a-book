@@ -1,56 +1,44 @@
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
 
-import { createUser } from '../utils/API';
-import Auth from '../utils/auth';
+//🔑 In the component where we want to execute the mutation, we import the mutation we created as well as the useMutation Hook:
+// Import the `useMutation()` hook from Apollo Client
+import { useMutation } from '@apollo/client';
+// Import the GraphQL mutation
+import { ADD_USER } from '../../utils/mutations';
 
 const SignupForm = () => {
-  // set initial form state
-  const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
-  // set state for form validation
-  const [validated] = useState(false);
-  // set state for alert
-  const [showAlert, setShowAlert] = useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
-  };
+  // Invoke `useMutation()` hook to return a Promise-based function and data about the ADD_PROFILE mutation
+  // 🔑 Next, we apply the useMutation Hook to return a mutation function that we can use to trigger the mutation as needed:
+  const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // check if form has everything (as per react-bootstrap docs)
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
+    // Since mutation function is async, wrap in a `try...catch` to catch any network errors from throwing due to a failed request.
+    // We wrap our mutation function in a try...catch and add error handling. This will handle any errors gracefully if our request fails:
     try {
-      const response = await createUser(userFormData);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      // Execute mutation and pass in defined parameter data as variables
+      const { data } = await addUser({
+        //🔑 We then assign a value to our mutation variable that represents the name entered by the user:
+        variables: { 
+            username,
+            email,
+            password},
+      });
+      // 🔑 Finally, we add a refresh to allow our page to reload after the mutation is executed. 
+      // This will stop any cache issues and allow our new profile to be displayed:
+      window.location.reload();
     } catch (err) {
       console.error(err);
-      setShowAlert(true);
     }
-
-    setUserFormData({
-      username: '',
-      email: '',
-      password: '',
-    });
   };
 
   return (
-    <>
+<>
       {/* This is needed for the validation functionality above */}
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         {/* show alert if server response is bad */}

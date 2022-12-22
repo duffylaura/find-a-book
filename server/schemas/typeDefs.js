@@ -28,19 +28,11 @@ type Query {
 }
 
 type Mutation {
-  login
-  addUser
-  saveBook
-  removeBook
+  login(email: String!, password: String!): Auth
+  addUser(username: String!, email: String!, password: String!): Auth
+  saveBook(bookID: ID!): User
+  removeBook(bookID: ID!): User
 }
 `;
-
-// ORIGINALLY HAD THIS BUT IT ISN'T WORKING?????
-// type Mutation {
-//   login(email: String!, password: String!): Auth
-//   addUser(username: String!, email: String!, password: String!): Auth
-//   saveBook(bookID: ID!): User
-//   removeBook(bookID: ID!): User
-// }
 
 module.exports = typeDefs;

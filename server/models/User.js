@@ -17,11 +17,15 @@ const userSchema = new Schema(
       unique: true,
       match: [/.+@.+\..+/, 'Must use a valid email address'],
     },
-    password: {
-      type: String,
-      required: true,
+    bookCount: {
+      type: Number, 
     },
-    savedBooks: [bookSchema],
+    savedBooks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'bookSchema'
+      }
+    ]
   },
   {
     toJSON: {

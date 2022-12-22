@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 import Auth from '../utils/auth';
-//To save and remove books
+//To save books
 //🔑 In the component where we want to execute the mutation, we import the mutation we created as well as the useMutation Hook:
 // Import the `useMutation()` hook from Apollo Client
 import { useMutation } from '@apollo/client';
